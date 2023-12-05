@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enkripsi dan Dekripsi Simetris</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Enkripsi dan Dekripsi Simetris</h2>
+    
+    <label for="plaintext">Pesan:</label>
+    <input type="text" id="plaintext" placeholder="Masukkan pesan">
+
+    <label for="key">Kunci:</label>
+    <input type="text" id="key" placeholder="Masukkan kunci">
+
+    <button onclick="encrypt()">Enkripsi</button>
+    <button onclick="decrypt()">Dekripsi</button>
+
+    <p>Hasil:</p>
+    <textarea id="result" rows="4" cols="50" readonly></textarea>
+
+    <script>
+        // Fungsi untuk melakukan enkripsi
+        function encrypt() {
+            var plaintext = document.getElementById('plaintext').value;
+            var key = document.getElementById('key').value;
+    
+            // Memanggil fungsi aesEncrypt untuk melakukan enkripsi
+            var encryptedMessage = aesEncrypt(plaintext, key);
+            document.getElementById('result').value = encryptedMessage;
+        }
+    
+        // Fungsi untuk melakukan dekripsi
+        function decrypt() {
+            var encryptedMessage = document.getElementById('result').value;
+            var key = document.getElementById('key').value;
+    
+            // Memanggil fungsi aesDecrypt untuk melakukan dekripsi
+            var decryptedMessage = aesDecrypt(encryptedMessage, key);
+            document.getElementById('result').value = decryptedMessage;
+        }
+    
+        // Fungsi untuk enkripsi menggunakan metode XOR
+        function aesEncrypt(plaintext, key) {
+            var encryptedMessage = "";
+            for (var i = 0; i < plaintext.length; i++) {
+                // XOR setiap karakter pesan dengan karakter kunci yang sesuai
+                var charCode = plaintext.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                encryptedMessage += String.fromCharCode(charCode);
+            }
+            // Menggunakan base64 untuk mengubah string enkripsi menjadi teks yang dapat ditampilkan
+            return btoa(encryptedMessage);
+        }
+    
+        // Fungsi untuk dekripsi menggunakan metode XOR
+        function aesDecrypt(encryptedMessage, key) {
+            // Mengembalikan string base64 ke bentuk string enkripsi asli
+            encryptedMessage = atob(encryptedMessage);
+            var decryptedMessage = "";
+            for (var i = 0; i < encryptedMessage.length; i++) {
+                // XOR setiap karakter enkripsi dengan karakter kunci yang sesuai
+                var charCode = encryptedMessage.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+                decryptedMessage += String.fromCharCode(charCode);
+            }
+            return decryptedMessage;
+        }
+    </script>
+</body>
+</html>
